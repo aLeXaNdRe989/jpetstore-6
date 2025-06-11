@@ -1,0 +1,36 @@
+name: DevSecOps Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  scan-and-analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Scan IaC avec Checkov
+    - name: Run Checkov
+      run: |
+        docker run --rm -v ${{ github.workspace }}:/iac bridgecrew/checkov -d /iac
+
+    # Scan vulnérabilités avec Trivy
+    - name: Run Trivy
+      run: |
+        docker run --rm -v ${{ github.workspace }}:/project aquasec/trivy fs /project
+
+    # Analyse SonarQube
+    - name: SonarQube scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.projectKey=devsecops-project
+          -Dsonar.sources=.
+          -Dsonar.host.url=http://localhost:9000
