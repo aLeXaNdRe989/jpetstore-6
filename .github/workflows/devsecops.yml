@@ -25,12 +25,8 @@ jobs:
         docker run --rm -v ${{ github.workspace }}:/project aquasec/trivy fs /project
 
     # Analyse SonarQube
-    - name: SonarQube scan
-      uses: sonarsource/sonarqube-scan-action@master
+    - name: Analyse de code avec SonarCloud
+      uses: SonarSource/sonarcloud-github-action@v2
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        args: >
-          -Dsonar.projectKey=devsecops-project
-          -Dsonar.sources=.
-          -Dsonar.host.url=http://localhost:9000
+
