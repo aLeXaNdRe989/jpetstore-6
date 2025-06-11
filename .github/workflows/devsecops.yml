@@ -29,4 +29,9 @@ jobs:
       uses: SonarSource/sonarcloud-github-action@v2
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.projectKey=aLeXaNdRe989_jpetstore-6
+          -Dsonar.organization=alexandre989
+          -Dsonar.host.url=https://sonarcloud.io
 
